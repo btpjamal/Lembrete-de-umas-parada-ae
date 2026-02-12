@@ -103,3 +103,18 @@
 
 	.env
 	data/
+
+<h1> REPOSITÓRIO BANCO DE DADOS </h1>
+// EXEMPLO DE COMO DEVE FICAR O REPOSITÓRIO DO BANCO DE DADOS
+
+	resources
+		|
+		--> db
+			 |
+			 --> migration
+			 	     |
+					 --> V2__Add_nomeDaAlteracao.sql
+					 |
+					 --> V3__Add_nomeDaAlteracao.sql
+					 |
+					 --> V4__Add_nomeDaAlteracao.sql
