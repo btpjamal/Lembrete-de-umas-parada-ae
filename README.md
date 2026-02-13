@@ -34,7 +34,13 @@
 	@RestController
 	@RequestMapping
 	public class NomeDaClasse {
-		@GetMapping("/nomedarota") // -> localhost:8080/nomedarota
+
+		// Mostrar tudo (READ)
+    	@GetMapping("/readAll")
+    	public List<ExemploModel> mostrarTodosOsDados(){
+        return exemploService.listarTodosOsDados();
+    	}
+		
 	}
 
 <h2> PARA CRIAR MODELS </h2>
@@ -63,7 +69,7 @@
 		private OutraClasseModel outraClasse; // pega o elemento da outra classe
 	}
 
-<h2> PARA INICIAR O JPA </h2>
+<h2> PARA CRIAR REPOSITORIES </h2>
 
 //JpaRepository -> "facilitador" semelhante ao lombok <br>
 // 1 atributo -> classe a ser escaneada <br>
@@ -71,6 +77,28 @@
 
 	public interface FuncaoRepository extends JpaRepository<ClasseExemploModel, Long> {
 	}
+
+<h1> PARA CRIAR SERVICES </h1>
+
+	@Service
+	public class ExemploService{
+	
+		// Injetar o repositório para acessar os dados
+		private ExemploRepository exemploRepository;
+
+		// Construtor
+		public ExemploService(ExemploRepository exemploRepository) {
+			this.exemploRepository = exemploRepository;
+		}
+
+		//Listar todos os dados
+    	public List<ExemploModel> listarTodosOsDados() {
+        return exemploRepository.findAll();
+    	}
+	}
+	
+	
+
 	
 <h1> APPLICATION.PROPERTIES </h1>
 
