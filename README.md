@@ -26,6 +26,11 @@
 			<artifactId>spring-boot-h2console</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
 <h1> MOLDES DAS CLASSES </h1>
 
 
@@ -107,7 +112,7 @@
 	spring.datasource.driverClassName=${DATABASE_DRIVER}
 	spring.datasource.username=${DATABASE_USERNAME}
 	spring.datasource.password=${DATABASE_PASSWORD}
-	DB_CLOSE_DELAY=-1
+	DB_CLOSE_DELAY=0
 	DB_CLOSE_ON_EXIT=FALSE
 	AUTO_SERVER=TRUE
 
