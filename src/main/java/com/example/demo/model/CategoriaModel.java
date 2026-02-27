@@ -5,14 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "produto")
-public class ProdutoModel {
+@Table(name = "categoria")
+public class CategoriaModel {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -21,16 +23,8 @@ public class ProdutoModel {
 
     @Column(name = "nome")
     private String nome;
-    @Column(name = "descricao")
-    private String descricao;
-    @Column(name = "preco")
-    private Double preco;
-    @Column(name = "quantidade")
-    private Integer quantidade;
 
-    // Relacionamento ManyToOne com CategoriaModel
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private CategoriaModel categoria;
-
+    // Relacionamento OneToMany com ProdutoModel
+    @OneToMany(mappedBy = "categoria")
+    private List<ProdutoModel> produtos;
 }

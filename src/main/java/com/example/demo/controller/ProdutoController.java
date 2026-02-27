@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ProdutoModel;
 import com.example.demo.service.ProdutoService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
