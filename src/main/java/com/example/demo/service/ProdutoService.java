@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.DTO.Mapper;
+import com.example.demo.DTO.ProdutoDTO;
 import com.example.demo.model.CategoriaModel;
 import com.example.demo.model.ProdutoModel;
 import com.example.demo.repository.ProdutoRepository;
@@ -7,36 +9,50 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final Mapper mapper;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
+
+
+    public ProdutoService(ProdutoRepository produtoRepository, Mapper mapper) {
         this.produtoRepository = produtoRepository;
+        this.mapper = mapper;
     }
 
     // CRUD - Create, Read, Update, Delete
 
     // Criar novo produto
-    public ProdutoModel criarProduto(ProdutoModel produto) {
-        return produtoRepository.save(produto);
+    public ProdutoDTO criarProduto(ProdutoDTO produtoDTO) {
+        ProdutoModel produtoModel = mapper.toProdutoModel(produtoDTO);
+        ProdutoModel Salvo = produtoRepository.save(produtoModel);
+        return mapper.toProdutoDTO(Salvo);
     }
 
     // Atualizar produto existente
-    public ProdutoModel atualizarProduto(ProdutoModel produto) {
-        return produtoRepository.save(produto);
+    public ProdutoDTO atualizarProduto(Long id, ProdutoDTO produtoDTO) {
+        ProdutoModel produtoModel = mapper.toProdutoModel(produtoDTO);
+        produtoModel.setId(id);
+        ProdutoModel atualizado = produtoRepository.save(produtoModel);
+        return mapper.toProdutoDTO(atualizado);
     }
 
     // Listar todos
-    public List<ProdutoModel> listarTodos() {
-        return produtoRepository.findAll();
+    public List<ProdutoDTO> listarTodos() {
+        return produtoRepository.findAll()
+                .stream()
+                .map(mapper::toProdutoDTO)
+                .collect(Collectors.toList());
     }
 
     // Buscar por ID
-    public Optional<ProdutoModel> buscarPorId(Long id) {
-        return produtoRepository.findById(id);
+    public Optional<ProdutoDTO> buscarPorId(Long id) {
+        return produtoRepository.findById(id)
+                .map(mapper::toProdutoDTO);
     }
 
     // Deletar
@@ -45,7 +61,10 @@ public class ProdutoService {
     }
 
     // Buscar produtos por categoria
-    public List<ProdutoModel> buscarPorCategoria(Long categoriaId) {
-        return produtoRepository.findByCategoriaId(categoriaId);
+    public List<ProdutoDTO> buscarPorCategoria(Long categoriaId) {
+        return produtoRepository.findByCategoriaId(categoriaId)
+                .stream()
+                .map(mapper::toProdutoDTO)
+                .collect(Collectors.toList());
     }
 }
