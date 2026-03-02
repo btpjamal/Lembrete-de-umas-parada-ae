@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.model.CategoriaModel;
 import com.example.demo.model.ProdutoModel;
 import com.example.demo.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -17,35 +19,33 @@ public class ProdutoService {
 
     // CRUD - Create, Read, Update, Delete
 
-    // Create - Criar um novo produto
-    public ProdutoModel createProduto(ProdutoModel produto) {
+    // Criar novo produto
+    public ProdutoModel criarProduto(ProdutoModel produto) {
         return produtoRepository.save(produto);
     }
 
-    // Read - Ler todos os produtos ou um produto específico
-    public List<ProdutoModel> getAllProdutos() {
+    // Atualizar produto existente
+    public ProdutoModel atualizarProduto(ProdutoModel produto) {
+        return produtoRepository.save(produto);
+    }
+
+    // Listar todos
+    public List<ProdutoModel> listarTodos() {
         return produtoRepository.findAll();
     }
 
-    public ProdutoModel getProdutoById(Long id) {
-        return produtoRepository.findById(id).orElse(null);
+    // Buscar por ID
+    public Optional<ProdutoModel> buscarPorId(Long id) {
+        return produtoRepository.findById(id);
     }
 
-    // Update - Atualizar um produto existente
-    public ProdutoModel updateProduto(Long id, ProdutoModel produto) {
-        ProdutoModel existingProduto = produtoRepository.findById(id).orElse(null);
-        if (existingProduto != null) {
-            existingProduto.setNome(produto.getNome());
-            existingProduto.setDescricao(produto.getDescricao());
-            existingProduto.setPreco(produto.getPreco());
-            existingProduto.setQuantidade(produto.getQuantidade());
-            return produtoRepository.save(existingProduto);
-        }
-        return null;
-    }
-
-    // Delete - Deletar um produto por ID
-    public void deleteProdutoById(Long id) {
+    // Deletar
+    public void deletar(Long id) {
         produtoRepository.deleteById(id);
+    }
+
+    // Buscar produtos por categoria
+    public List<ProdutoModel> buscarPorCategoria(Long categoriaId) {
+        return produtoRepository.findByCategoriaId(categoriaId);
     }
 }

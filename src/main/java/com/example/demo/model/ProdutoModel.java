@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,8 +30,9 @@ public class ProdutoModel {
     private Integer quantidade;
 
     // Relacionamento ManyToOne com CategoriaModel
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // carregamento imediato da categoria
     @JoinColumn(name = "categoria_id")
+    @JsonBackReference
     private CategoriaModel categoria;
 
 }

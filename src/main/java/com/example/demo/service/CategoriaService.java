@@ -6,6 +6,7 @@ import com.example.demo.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -18,42 +19,33 @@ public class CategoriaService {
 
     // CRUD - Create, Read, Update, Delete
 
-    // Create - Criar uma nova categoria
-    public CategoriaModel createCategoria(CategoriaModel categoria) {
+    // Criar nova categoria
+    public CategoriaModel criarCategoria(CategoriaModel categoria) {
         return categoriaRepository.save(categoria);
     }
 
-    // Read - Ler todas as categorias ou uma categoria específica
-    public List<CategoriaModel> getAllCategorias() {
+    // Atualizar categoria existente
+    public CategoriaModel atualizarCategoria(CategoriaModel categoria) {
+        return categoriaRepository.save(categoria);
+    }
+
+    // Listar todas
+    public List<CategoriaModel> listarTodas() {
         return categoriaRepository.findAll();
     }
 
-    public CategoriaModel getCategoriaById(Long id) {
-        return categoriaRepository.findById(id).orElse(null);
+    // Buscar por ID
+    public Optional<CategoriaModel> buscarPorId(Long id) {
+        return categoriaRepository.findById(id);
     }
 
-    // Update - Atualizar uma categoria existente
-    public CategoriaModel updateCategoria(Long id, CategoriaModel categoria) {
-        CategoriaModel existingCategoria = categoriaRepository.findById(id).orElse(null);
-        if (existingCategoria != null) {
-            existingCategoria.setNome(categoria.getNome());
-            existingCategoria.setProdutos(categoria.getProdutos());
-            return categoriaRepository.save(existingCategoria);
-        }
-        return null;
+    // Buscar categoria com produtos
+    public Optional<CategoriaModel> buscarPorIdComProdutos(Long id) {
+        return categoriaRepository.findByIdWithProdutos(id);
     }
 
-    // Delete - Deletar uma categoria por ID
-    public void deleteCategoriaById(Long id) {
+    // Deletar
+    public void deletar(Long id) {
         categoriaRepository.deleteById(id);
-    }
-
-    // Método para obter produtos por categoria
-    public List<ProdutoModel> getProdutosByCategoriaId(Long id) {
-        CategoriaModel categoria = categoriaRepository.findById(id).orElse(null);
-        if (categoria != null) {
-            return categoria.getProdutos();
-        }
-        return null;
     }
 }

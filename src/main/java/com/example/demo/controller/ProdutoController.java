@@ -3,46 +3,64 @@ package com.example.demo.controller;
 import com.example.demo.model.ProdutoModel;
 import com.example.demo.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController{
 
+    private final ProdutoService produtoService;
+
     @Autowired
-    private ProdutoService produtoService;
+    public ProdutoController(ProdutoService produtoService) {
+        this.produtoService = produtoService;
+    }
 
-    // Endpoint para criar um novo produto
+    // Criar novo produto
     @PostMapping("/create")
-    public ProdutoModel createProduto(@RequestBody ProdutoModel produto) {
-        return produtoService.createProduto(produto);
+    public ResponseEntity<ProdutoModel> criarProduto(@RequestBody ProdutoModel produto) {
+        ProdutoModel novoProduto = produtoService.criarProduto(produto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoProduto);
     }
 
-    // Endpoint para obter todos os produtos
+    // Listar todos os produtos
     @GetMapping("/readAll")
-    public List<ProdutoModel> getAllProdutos() {
-        return produtoService.getAllProdutos();
+    public List<ProdutoModel> listarTodos() {
+        return produtoService.listarTodos();
     }
 
-    // Endpoint para obter um produto por ID
+    // Buscar produto por ID
     @GetMapping("/read/{id}")
-    public ProdutoModel getProdutoById(@PathVariable Long id) {
-        return produtoService.getProdutoById(id);
+    public ResponseEntity<ProdutoModel> buscarPorId(@PathVariable Long id) {
+        return produtoService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint para atualizar um produto existente
+    // Buscar produtos por categoria
+    @GetMapping("/categoria/{categoriaId}")
+    public List<ProdutoModel> buscarPorCategoria(@PathVariable Long categoriaId) {
+        return produtoService.buscarPorCategoria(categoriaId);
+    }
+
+    // Atualizar produto existente
     @PutMapping("/update/{id}")
-    public ProdutoModel updateProduto(@PathVariable Long id, @RequestBody ProdutoModel produto)
-    {
-        return produtoService.updateProduto(id, produto);
+    public ResponseEntity<ProdutoModel> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoModel produto) {
+        produto.setId(id);
+        ProdutoModel atualizado = produtoService.atualizarProduto(produto);
+        return ResponseEntity.ok(atualizado);
     }
 
-    // Endpoint para deletar um produto por ID
+    // Deletar produto
     @DeleteMapping("/delete/{id}")
-    public void deleteProdutoById(@PathVariable Long id) {
-        produtoService.deleteProdutoById(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        produtoService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

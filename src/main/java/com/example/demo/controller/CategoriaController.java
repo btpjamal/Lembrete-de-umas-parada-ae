@@ -4,6 +4,8 @@ import com.example.demo.model.CategoriaModel;
 import com.example.demo.model.ProdutoModel;
 import com.example.demo.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,42 +14,55 @@ import java.util.List;
 @RequestMapping("/categorias")
 public class CategoriaController {
 
-    @Autowired
-    private CategoriaService categoriaService;
+    private final CategoriaService categoriaService;
 
-    // Endpoint para criar uma nova categoria
+
+    public CategoriaController(CategoriaService categoriaService) {
+        this.categoriaService = categoriaService;
+    }
+
+    // Criar nova categoria
     @PostMapping("/create")
-    public CategoriaModel createCategoria(@RequestBody CategoriaModel categoria) {
-         return categoriaService.createCategoria(categoria);
+    public ResponseEntity<CategoriaModel> criarCategoria(@RequestBody CategoriaModel categoria) {
+        CategoriaModel novaCategoria = categoriaService.criarCategoria(categoria);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
     }
 
-    // Endpoint para obter todas as categorias
+    // Listar todas as categorias
     @GetMapping("/readAll")
-    public List<CategoriaModel> getAllCategorias() {
-        return categoriaService.getAllCategorias();
+    public List<CategoriaModel> listarTodas() {
+        return categoriaService.listarTodas();
     }
 
-    // Endpoint para obter uma categoria por ID
+    // Buscar categoria por ID
     @GetMapping("/read/{id}")
-    public CategoriaModel getCategoriaById(@PathVariable Long id) {
-        return categoriaService.getCategoriaById(id);
+    public ResponseEntity<CategoriaModel> buscarPorId(@PathVariable Long id) {
+        return categoriaService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint para atualizar uma categoria existente
+    // Buscar categoria com produtos associados
+    @GetMapping("/read/{id}/produtos")
+    public ResponseEntity<CategoriaModel> buscarPorIdComProdutos(@PathVariable Long id) {
+        return categoriaService.buscarPorIdComProdutos(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Atualizar categoria existente
     @PutMapping("/update/{id}")
-    public CategoriaModel updateCategoria(@PathVariable Long id, @RequestBody CategoriaModel categoria) {
-        return categoriaService.updateCategoria(id, categoria);
+    public ResponseEntity<CategoriaModel> atualizarCategoria(@PathVariable Long id, @RequestBody CategoriaModel categoria) {
+        categoria.setId(id);
+        CategoriaModel atualizada = categoriaService.atualizarCategoria(categoria);
+        return ResponseEntity.ok(atualizada);
     }
 
-    // Endpoint para deletar uma categoria por ID
+    // Deletar categoria
     @DeleteMapping("/delete/{id}")
-    public void deleteCategoriaById(@PathVariable Long id) {
-        categoriaService.deleteCategoriaById(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        categoriaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // Endpoint para obter produtos por categoria
-    @GetMapping("/{id}/produtos")
-    public List<ProdutoModel> getProdutosByCategoriaId(@PathVariable Long id) {
-        return categoriaService.getProdutosByCategoriaId(id);
-    }
 }
