@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.DTO.ProdutoDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonMerge;

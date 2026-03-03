@@ -4,6 +4,7 @@ import com.example.demo.DTO.Mapper;
 import com.example.demo.DTO.ProdutoDTO;
 import com.example.demo.model.CategoriaModel;
 import com.example.demo.model.ProdutoModel;
+import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,23 +16,33 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final CategoriaRepository categoriaRepository;
     private final Mapper mapper;
 
 
 
-    public ProdutoService(ProdutoRepository produtoRepository, Mapper mapper) {
+    public ProdutoService(ProdutoRepository produtoRepository, CategoriaRepository categoriaRepository, Mapper mapper) {
         this.produtoRepository = produtoRepository;
+        this.categoriaRepository = categoriaRepository;
         this.mapper = mapper;
     }
 
     // CRUD - Create, Read, Update, Delete
 
-    // Criar novo produto
     public ProdutoDTO criarProduto(ProdutoDTO produtoDTO) {
         ProdutoModel produtoModel = mapper.toProdutoModel(produtoDTO);
-        ProdutoModel Salvo = produtoRepository.save(produtoModel);
-        return mapper.toProdutoDTO(Salvo);
+
+        // Se veio categoriaId, buscar a categoria e associar
+        if (produtoDTO.getCategoriaId() != null) {
+            CategoriaModel categoria = categoriaRepository.findById(produtoDTO.getCategoriaId())
+                    .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+            produtoModel.setCategoria(categoria);
+        }
+
+        ProdutoModel salvo = produtoRepository.save(produtoModel);
+        return mapper.toProdutoDTO(salvo);
     }
+
 
     // Atualizar produto existente
     public ProdutoDTO atualizarProduto(Long id, ProdutoDTO produtoDTO) {

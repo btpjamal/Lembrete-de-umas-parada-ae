@@ -15,5 +15,5 @@ public class ProdutoDTO {
     private String descricao;
     private Double preco;
     private Integer quantidade;
-    private CategoriaModel categoria;
+    private Long categoriaId;
 }

@@ -1,6 +1,5 @@
 package com.example.demo.DTO;
 
-import com.example.demo.model.ProdutoModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +15,5 @@ public class CategoriaDTO {
 
     private Long id;
     private String nome;
-    private List<ProdutoModel> produtos = new ArrayList<>();
+    private List<ProdutoDTO> produtos = new ArrayList<>();
 }
